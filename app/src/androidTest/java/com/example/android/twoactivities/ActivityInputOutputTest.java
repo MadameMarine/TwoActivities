@@ -18,11 +18,18 @@ package com.example.android.twoactivities;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -30,13 +37,32 @@ import static org.junit.Assert.assertEquals;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
+
+//@RunWith : Create an instrumented JUnit 4 test class
 @RunWith(AndroidJUnit4.class)
-public class ExampleInstrumentedTest {
+public class ActivityInputOutputTest {
+
+    //@Rule : Add or redefine the behavior of each test method in  a reusable way
+    @Rule
+    public ActivityTestRule mActivityRule = new ActivityTestRule<>(MainActivity.class);
+
+/*    @Test tells Junit that the public void method which it is attached
+    can be run as a test case*/
     @Test
     public void useAppContext() throws Exception {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
         assertEquals("com.example.android.twoactivities", appContext.getPackageName());
+    }
+
+/*    This method will test whether the SecondActivity View element appear when
+    clicking the Button*/
+    @Test
+    public void activityLaunch(){
+        onView(withId(R.id.button_main)).perform(click());
+        onView(withId(R.id.text_header)).check(matches(isDisplayed()));
+        onView(withId(R.id.button_second)).perform(click());
+        onView(withId(R.id.text_header_reply)).check(matches(isDisplayed()));
     }
 }
